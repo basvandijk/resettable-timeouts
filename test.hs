@@ -5,7 +5,7 @@ module Main where
 import System.Event (EventManager)
 import GHC.Conc.Sync (sharedCAF)
 import Foreign.Ptr (Ptr)
-import Data.IORef (IORef, newIORef, writeIORef, readIORef, atomicModifyIORef)
+import Data.IORef (IORef, newIORef, readIORef)
 import System.IO.Unsafe (unsafePerformIO)
 
 import Control.Monad
@@ -16,6 +16,7 @@ import System.Timeout.Resetable.ADT
 
 --------------------------------------------------------------------------------
 
+main :: IO ()
 main = do 
   Just mgr <- readIORef eventManager
   k <- register mgr 500000 $ putStrLn "Timeout!"
@@ -24,9 +25,9 @@ main = do
 
   replicateM_ 10 $ do
     threadDelay 100000
-    reset k 500000
+    reset k
 
-  cancel mgr k
+  -- cancel k
 
   threadDelay 1000000
 
