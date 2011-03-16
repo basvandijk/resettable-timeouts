@@ -12,8 +12,8 @@ category:      System
 synopsis:      Timeouts that can be paused and reset
 
 source-repository head
-  Type: darcs
-  Location: http://code.haskell.org/~basvandijk/code/resettable-timeouts
+  Type: git
+  Location: git://github.com/basvandijk/resettable-timeouts.git
 
 -------------------------------------------------------------------------------
 
