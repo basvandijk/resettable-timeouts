@@ -1,7 +1,7 @@
 name:          resettable-timeouts
 version:       0.1
 cabal-version: >= 1.9.2
-build-type:    Custom
+build-type:    Simple
 stability:     experimental
 author:        Bas van Dijk
 maintainer:    Bas van Dijk <v.dijk.bas@gmail.com>
