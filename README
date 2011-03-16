@@ -1,0 +1,2 @@
+Timeouts that can be paused and reset.
+The implementation directly uses the GHC event manager from System.Event

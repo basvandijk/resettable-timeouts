@@ -1,0 +1,37 @@
+name:          resetable-timeouts
+version:       0.1
+cabal-version: >= 1.9.2
+build-type:    Custom
+stability:     experimental
+author:        Bas van Dijk
+maintainer:    Bas van Dijk <v.dijk.bas@gmail.com>
+copyright:     (c) 2011 Bas van Dijk
+license:       BSD3
+license-file:  LICENSE
+category:      System
+synopsis:      Timeouts that can be paused and reset
+
+source-repository head
+  Type: darcs
+  Location: http://code.haskell.org/~basvandijk/code/resetable-timeouts
+
+-------------------------------------------------------------------------------
+
+library
+  build-depends: base                 >= 4.3.1 && < 4.4
+  exposed-modules: System.Timeout.Resetable
+                   System.Timeout.Resetable.ADT
+                   System.Timeout.Resetable.CPS
+  ghc-options: -Wall
+
+-------------------------------------------------------------------------------
+
+test-suite test-timeout
+  type:    exitcode-stdio-1.0
+  main-is: test.hs
+
+  ghc-options: -Wall -O2 -threaded
+
+  build-depends: base >= 4.3.1 && < 4.4
+
+-------------------------------------------------------------------------------
