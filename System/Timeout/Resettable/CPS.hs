@@ -1,4 +1,4 @@
-module System.Timeout.Resetable.ADT
+module System.Timeout.Resettable.CPS
     ( TimeoutCallback
     , Key
     , register
@@ -25,35 +25,38 @@ import System.Event      ( EventManager
                          )
 
 ---------------------------------------------------------------------
--- Resetable timeouts
+-- Resettable timeouts
 ---------------------------------------------------------------------
 
-data Key = Key !EventManager !TimeoutKey !(IORef State) 
+data Key = Key !EventManager !TimeoutKey !(IORef OnTimeout)
 
-data State = Active | Reset | Pause
+type OnTimeout = Int -> TimeoutCallback -> TimeoutKey -> IO ()
 
 register :: EventManager -> Int -> TimeoutCallback -> IO Key
 register mgr us cb = do
-  ref <- newIORef Active
+  ref <- newIORef callCallback
   tk <- newTimeoutKey mgr
-  let loop = insertTimeout mgr tk us $
-               readIORef ref >>= \state ->
-                 case state of
-                   Active -> cb
-                   Reset  -> writeIORef ref Active >> loop
-                   Pause  -> loop
-  loop
+  continue mgr ref us cb tk
   return $ Key mgr tk ref
 
+callCallback :: OnTimeout
+callCallback _ cb _ = cb
+
+continue :: EventManager -> IORef OnTimeout -> OnTimeout
+continue mgr ref = \us cb tk -> insertTimeout mgr tk us $ 
+                                  readIORef ref >>= \onTimeout -> 
+                                    onTimeout us cb tk
+
 pause :: Key -> IO ()
-pause (Key _ _ ref) = writeIORef ref Pause
+pause (Key mgr _ ref) = writeIORef ref $ continue mgr ref
 
 reset :: Key -> IO ()
-reset (Key _ _ ref) = writeIORef ref Reset
+reset (Key mgr _ ref) = writeIORef ref $ \us cb tk ->
+                          writeIORef ref callCallback >>
+                          continue mgr ref us cb tk
 
 whilePaused :: Key -> IO a -> IO a
-whilePaused (Key _ _ ref) = bracket_ (writeIORef ref Pause)
-                                     (writeIORef ref Reset)
+whilePaused key = bracket_ (pause key) (reset key)
 
 cancel :: Key -> IO ()
 cancel (Key mgr tk _) = unregisterTimeout mgr tk

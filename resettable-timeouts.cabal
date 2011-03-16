@@ -1,4 +1,4 @@
-name:          resetable-timeouts
+name:          resettable-timeouts
 version:       0.1
 cabal-version: >= 1.9.2
 build-type:    Custom
@@ -13,15 +13,15 @@ synopsis:      Timeouts that can be paused and reset
 
 source-repository head
   Type: darcs
-  Location: http://code.haskell.org/~basvandijk/code/resetable-timeouts
+  Location: http://code.haskell.org/~basvandijk/code/resettable-timeouts
 
 -------------------------------------------------------------------------------
 
 library
   build-depends: base                 >= 4.3.1 && < 4.4
-  exposed-modules: System.Timeout.Resetable
-                   System.Timeout.Resetable.ADT
-                   System.Timeout.Resetable.CPS
+  exposed-modules: System.Timeout.Resettable
+                   System.Timeout.Resettable.ADT
+                   System.Timeout.Resettable.CPS
   ghc-options: -Wall
 
 -------------------------------------------------------------------------------
